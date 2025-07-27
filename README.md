@@ -1,25 +1,22 @@
 # Zeller Checkout System
 
-A flexible checkout system for Zeller computer store with configurable pricing rules.
+A flexible checkout system for Zeller's computer store, designed for easy product scanning, pricing, and promotional offers.
 
-## Features
+## Key Features
 
-- Product scanning and total calculation
-- Flexible pricing rule engine
-- Support for promotional offers (Buy X Get Y Free, Bulk Discounts)
-- TypeScript implementation with full type safety
-- Comprehensive unit test coverage
-- Monetary values handled in integer cents to avoid floating-point inaccuracies.
-- Product catalog loaded from `config.json` for easy modification.
+-   **Product Handling:** Items can be scanned and totals calculated.
+-   **Flexible Pricing:** A powerful rule engine supports various promotions (e.g., Buy X Get Y Free, bulk discounts).
+-   **Robust & Accurate:** Built with TypeScript for type safety, comprehensive tests, and uses integer cents for precise monetary calculations.
+-   **Configurable:** The product catalog and pricing rules are easily updated via `config.json`.
 
-## Installation
+## Setup
 
 ```bash
 npm install
 npm run build
 ```
 
-## Usage
+## Usage Example
 
 ```typescript
 import { createDefaultCheckout } from './src';
@@ -31,42 +28,47 @@ checkout.scan('atv');
 checkout.scan('atv');
 checkout.scan('vga');
 
-console.log(checkout.total()); // $249.00
+console.log(checkout.total()); // Expected: $249.00
 ```
 
 ## Testing
 
 ```bash
-npm test                # Run all tests
-npm run test:coverage   # Run tests with coverage
-npm run test:watch      # Run tests in watch mode
+npm test                # Runs all tests
+npm run test:coverage   # Runs tests with coverage report
+npm run test:watch      # Runs tests in watch mode
 ```
 
-## Architecture
+## Architecture Overview
 
-The system is built with flexibility and extensibility in mind:
+The system is modular and extensible:
 
-- **Checkout**: Main orchestrator for scanning and calculations
-- **PricingRule**: Abstract interface for promotional rules
-- **ProductCatalog**: Manages product information, now configurable from `config.json`
-- **Pricing Rules**: Configurable promotional logic
+-   **Checkout:** Orchestrates scanning and total calculation.
+-   **PricingRule:** Defines the interface for all promotional rules.
+-   **ProductCatalog:** Manages product information, loaded from `config.json`.
+-   **Pricing Rules:** Implement specific promotional logic.
 
-## Adding New Pricing Rules
+## Extending with New Pricing Rules
 
-Create a new class implementing the `PricingRule` interface:
+To add a new promotion, a new rule can be added to `config.json` and ensured it is included in the `Checkout` setup.
 
-```typescript
-export class NewPromotionRule extends BasePricingRule {
-  calculatePrice(quantity: number, basePriceInCents: number): number {
-    // Your promotion logic here
-  }
-}
-```
-
-Then, add the new rule to your `config.json` and ensure it's instantiated in your `Checkout` setup.
-
-## Current Test Coverage
-
-As of the last run, test coverage is high, with minor uncovered branches primarily due to the nature of `Math.min` in the `Checkout` class and the current set of pricing rules always providing a discount. All critical paths and business requirements are fully covered by tests.
-
-This implementation provides a solid foundation that can scale with Zeller's business needs while maintaining the flexibility required for rapid promotional changes.
+## Test Coverage
+----------------------|---------|----------|---------|---------|-------------------
+File                  | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------------|---------|----------|---------|---------|-------------------
+All files             |   97.33 |     87.5 |      90 |   97.29 |                   
+ src                  |   95.65 |    71.42 |   83.33 |   95.45 |                   
+  Checkout.ts         |   95.65 |    71.42 |   83.33 |   95.45 | 50                
+ src/models           |     100 |      100 |     100 |     100 |                   
+  Product.ts          |     100 |      100 |     100 |     100 |                   
+ src/pricing-rules    |     100 |     92.3 |     100 |     100 |                   
+  BulkDiscountRule.ts |     100 |      100 |     100 |     100 |                   
+  BuyXGetYFreeRule.ts |     100 |    85.71 |     100 |     100 | 7                 
+  PricingRule.ts      |     100 |      100 |     100 |     100 |                   
+ src/services         |   93.75 |      100 |   85.71 |   93.75 |                   
+  ProductCatalog.ts   |   93.75 |      100 |   85.71 |   93.75 | 23                
+----------------------|---------|----------|---------|---------|-------------------
+Test Suites: 1 passed, 1 total
+Tests:       27 passed, 27 total
+Snapshots:   0 total
+Time:        1.408 s
